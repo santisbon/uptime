@@ -10,7 +10,7 @@ Helm chart for [Uptime Kuma](https://github.com/louislam/uptime-kuma), a self-ho
 
 ## Install
 
-Install directly from this repository when you have the source checked out locally and are deploying to a single cluster you manage yourself. This is the simplest path: no packaging or publishing step required, and changes to the chart take effect on the next `helm upgrade --install`.
+**Install directly from this repository** when you have the source checked out locally and are deploying to a single cluster you manage yourself. This is the simplest path: no packaging or publishing step required, and changes to the chart take effect on the next `helm upgrade --install`.
 
 ```bash
 helm upgrade --install uptime-kuma ./charts/uptime-kuma \
@@ -18,7 +18,11 @@ helm upgrade --install uptime-kuma ./charts/uptime-kuma \
   --set 'httpRoute.hostnames[0]=uptime.example.com'
 ```
 
-Publish the chart to a registry or repository (see [Publishing the chart](#publishing-the-chart)) when you need to share it across multiple clusters, teams, or CI/CD pipelines, or when you want to pin deployments to a specific released version rather than whatever is currently on disk.
+**Publish the chart to a registry or repository** (see [Publishing the chart](#publishing-the-chart)) when you need to share it across multiple clusters, teams, or CI/CD pipelines, or when you want to pin deployments to a specific released version rather than whatever is currently on disk.
+
+**Local network access by IP:** Omit `httpRoute.hostnames` entirely so the route matches all requests the Gateway receives, then access Uptime Kuma directly by any node's LAN IP address (e.g. `http://192.168.1.100`). No DNS or domain needed. Any node works because Traefik runs on every node as a DaemonSet and listens on ports 80 and 443 on each one; it routes traffic to the Uptime Kuma pod internally regardless of which node the pod was scheduled on.
+
+**Exposing to the internet without port forwarding:** Use [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) (`cloudflared`), which opens an outbound-only connection from your network to Cloudflare's edge. No open inbound ports or router configuration needed. It's free, works with a custom domain you manage in Cloudflare, and handles HTTPS automatically. Run `cloudflared` as a service on the MicroK8s node pointing at the node's LAN IP and port, and set `httpRoute.hostnames` to your Cloudflare-managed domain. As an alternative, [ngrok](https://ngrok.com) is simpler to set up but the free tier assigns a random URL that changes every time the agent restarts.
 
 Key values:
 
@@ -34,6 +38,16 @@ Key values:
 ## Publishing the chart
 
 Helm supports two publishing models: **OCI registries** (the modern path) and **classic HTTP chart repositories**. Both are shown below.
+
+The install commands in this section omit `--set` flags for brevity. Pass the same values you would when installing from source, either as `--set` flags or with a values file:
+
+```bash
+# Inline
+helm upgrade --install uptime-kuma <chart-ref> --set 'httpRoute.hostnames[0]=uptime.example.com'
+
+# Values file (preferred when overriding multiple values)
+helm upgrade --install uptime-kuma <chart-ref> -f my-values.yaml
+```
 
 ### OCI registry (recommended)
 
