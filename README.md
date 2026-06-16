@@ -101,7 +101,11 @@ helm upgrade --install uptime-kuma oci://node-01.local:32000/charts/uptime-kuma 
 ```
 ```sh
 helm list --all-namespaces
+kubectl get pvc -n uptime-kuma # Should be Bound
+kubectl get pods -n uptime-kuma # Should be Running
 ```
+
+Go to any node's IP/hostname e.g. http://node-01.local
 
 #### GitHub Container Registry (GHCR)
 
