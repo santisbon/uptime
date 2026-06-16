@@ -40,12 +40,12 @@ helm upgrade --install uptime-kuma ./charts/uptime-kuma \
 ```bash
 helm upgrade --install uptime-kuma ./charts/uptime-kuma \
   --namespace uptime-kuma --create-namespace \
-  --set 'httpRoute.hostnames[0]=uptime.node-01.local'
+  --set 'httpRoute.hostnames[0]=uptime.home'
 ```
 
 ```
 # /etc/hosts
-192.168.1.100  uptime.node-01.local
+192.168.1.100  uptime.home
 ```
 
 This is the right approach when running multiple apps on the same cluster — each app gets its own hostname pointing to the same IP, and Traefik reads the `Host` header to route each request to the correct service. Any node's IP works for the `/etc/hosts` entry since Traefik runs as a DaemonSet on every node.
@@ -110,10 +110,10 @@ helm show chart oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 --p
 
 Install directly from it:
 
-*Assumes you've set up your `/etc/hosts` for `uptime.node-01.local` with a node's IP.*
+*Assumes you've set up your `/etc/hosts` for `uptime.home` with a node's IP.*
 ```bash
 helm upgrade --install uptime-kuma oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 \
-  --namespace uptime-kuma --create-namespace --set 'httpRoute.hostnames[0]=uptime.node-01.local' \
+  --namespace uptime-kuma --create-namespace --set 'httpRoute.hostnames[0]=uptime.home' \
   --plain-http # if you don't have https
 ```
 
@@ -123,7 +123,7 @@ kubectl get pvc -n uptime-kuma # Should be Bound
 kubectl get pods -n uptime-kuma # Should be Running
 ```
 
-Go to any node's IP/hostname e.g. http://uptime.node-01.local
+Go to any node's IP/hostname e.g. http://uptime.home
 
 #### GitHub Container Registry (GHCR)
 
