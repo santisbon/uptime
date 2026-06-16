@@ -1,0 +1,20 @@
+# Helm artifacts
+*.tgz
+charts/*/charts/
+
+# Secrets: never commit real secrets
+secrets*.yaml
+*-secrets.yaml
+*-secret.yaml
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.bkp

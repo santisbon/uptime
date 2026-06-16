@@ -1,0 +1,76 @@
+replicaCount: 1
+
+image:
+  repository: louislam/uptime-kuma
+  pullPolicy: IfNotPresent
+  tag: "2"
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3001
+
+# Gateway API HTTPRoute requires gateway.networking.k8s.io CRDs and a
+# provisioned Gateway in the cluster.
+#
+# MicroK8s ingress addon provisions a Traefik-based Gateway named
+# "traefik-gateway" in the "ingress" namespace.
+httpRoute:
+  enabled: true
+  annotations: {}
+  # One or more Gateway parentRefs that this route attaches to.
+  parentRefs:
+    - name: traefik-gateway
+      namespace: ingress
+  # Hostnames the HTTPRoute matches. Leave empty to match all hostnames
+  # accepted by the parent Gateway.
+  hostnames: []
+  # - uptime.example.com
+
+persistence:
+  enabled: true
+  storageClass: "ceph-rbd"
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  # Reuse an existing PVC instead of creating a new one.
+  existingClaim: ""
+
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
