@@ -4,10 +4,9 @@ Helm chart for [Uptime Kuma](https://github.com/louislam/uptime-kuma), a self-ho
 
 ## Prerequisites
 
-- MicroK8s with addons: `ingress`, `rook-ceph`, `registry`, `dns`, `helm`, `helm3`
-- MicroCeph with RGW enabled and the RBD kernel module loaded
-- `gateway.networking.k8s.io` CRDs (installed by the MicroK8s ingress addon)
 - Helm 3
+- A Kubernetes cluster with `gateway.networking.k8s.io` CRDs and a provisioned Gateway (the MicroK8s `ingress` addon satisfies both, providing a `traefik-gateway` Gateway in the `ingress` namespace)
+- A StorageClass for the data PVC (defaults to `ceph-rbd`; set `persistence.storageClass` to use a different one)
 
 ## Install
 
