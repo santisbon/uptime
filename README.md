@@ -35,7 +35,22 @@ helm upgrade --install uptime-kuma ./charts/uptime-kuma \
 
 **Publish the chart to a registry or repository** (see [Publishing the chart](#publishing-the-chart)) when you need to share it across multiple clusters, teams, or CI/CD pipelines, or when you want to pin deployments to a specific released version rather than whatever is currently on disk.
 
-**Local network access by IP:** Omit `httpRoute.hostnames` entirely so the route matches all requests the Gateway receives, then access Uptime Kuma directly by any node's LAN IP address (e.g. `http://192.168.1.100`). No DNS or domain needed. Any node works because Traefik runs on every node as a DaemonSet and listens on ports 80 and 443 on each one; it routes traffic to the Uptime Kuma pod internally regardless of which node the pod was scheduled on.
+**Local network access by hostname:** Set a hostname and add a corresponding entry to `/etc/hosts` on any machine that needs to reach it:
+
+```bash
+helm upgrade --install uptime-kuma ./charts/uptime-kuma \
+  --namespace uptime-kuma --create-namespace \
+  --set 'httpRoute.hostnames[0]=uptime.node-01.local'
+```
+
+```
+# /etc/hosts
+192.168.1.100  uptime.node-01.local
+```
+
+This is the right approach when running multiple apps on the same cluster — each app gets its own hostname pointing to the same IP, and Traefik reads the `Host` header to route each request to the correct service. Any node's IP works for the `/etc/hosts` entry since Traefik runs as a DaemonSet on every node.
+
+If you only have one app and want the simplest possible setup, omit `httpRoute.hostnames` entirely and access Uptime Kuma directly by any node's LAN IP address (e.g. `http://192.168.1.100`). No hostname or `/etc/hosts` entry needed.
 
 **Exposing to the internet without port forwarding:** Use [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) (`cloudflared`), which opens an outbound-only connection from your network to Cloudflare's edge. No open inbound ports or router configuration needed. It's free, works with a custom domain you manage in Cloudflare, and handles HTTPS automatically. Run `cloudflared` as a service on the MicroK8s node pointing at the node's LAN IP and port, and set `httpRoute.hostnames` to your Cloudflare-managed domain. As an alternative, [ngrok](https://ngrok.com) is simpler to set up but the free tier assigns a random URL that changes every time the agent restarts.
 
@@ -95,17 +110,20 @@ helm show chart oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 --p
 
 Install directly from it:
 
+*Assumes you've set up your `/etc/hosts` for `uptime.node-01.local` with a node's IP.*
 ```bash
 helm upgrade --install uptime-kuma oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 \
-  --namespace uptime-kuma --create-namespace --plain-http # if you don't have https
+  --namespace uptime-kuma --create-namespace --set 'httpRoute.hostnames[0]=uptime.node-01.local' \
+  --plain-http # if you don't have https
 ```
+
 ```sh
 helm list --all-namespaces
 kubectl get pvc -n uptime-kuma # Should be Bound
 kubectl get pods -n uptime-kuma # Should be Running
 ```
 
-Go to any node's IP/hostname e.g. http://node-01.local
+Go to any node's IP/hostname e.g. http://uptime.node-01.local
 
 #### GitHub Container Registry (GHCR)
 
