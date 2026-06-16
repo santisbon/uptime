@@ -7,6 +7,21 @@ Helm chart for [Uptime Kuma](https://github.com/louislam/uptime-kuma), a self-ho
 - Helm 3
 - A Kubernetes cluster with `gateway.networking.k8s.io` CRDs and a provisioned Gateway (the MicroK8s `ingress` addon satisfies both, providing a `traefik-gateway` Gateway in the `ingress` namespace)
 - A StorageClass for the data PVC (defaults to `ceph-rbd`; set `persistence.storageClass` to use a different one)
+- A kubeconfig pointing at the cluster. If you're running Helm from a machine that is not a cluster node, copy the kubeconfig from any node and replace the loopback address with the node's LAN IP or host name. If your cluster node user is `ubuntu` and a node is `node-01.local`:
+
+  ```bash
+  ssh ubuntu@node-01.local "microk8s config" \
+    | sed 's/127.0.0.1/node-01.local/' \
+    > ~/.kube/microk8s.yaml
+  export KUBECONFIG=~/.kube/microk8s.yaml
+  ```
+
+  To avoid setting `KUBECONFIG` in every shell session, add the export to your `~/.bashrc` or `~/.zshrc`, or merge it into your existing `~/.kube/config`:
+
+  ```bash
+  KUBECONFIG=~/.kube/config:~/.kube/microk8s.yaml \
+    kubectl config view --flatten > ~/.kube/config
+  ```
 
 ## Install
 
@@ -55,34 +70,37 @@ OCI lets you push charts to any container registry, including the MicroK8s built
 
 #### MicroK8s built-in registry
 
-The MicroK8s registry addon runs an unauthenticated registry at `localhost:32000` on every node.
+The MicroK8s registry addon exposes an unauthenticated registry on port 32000 on every node. Use any node's LAN IP or host name to reach it from your laptop.
 
 ```bash
 # Package the chart
 helm package charts/uptime-kuma
 
 # Push (Helm 3.8+)
-helm push uptime-kuma-*.tgz oci://localhost:32000/charts
+helm push uptime-kuma-*.tgz oci://node-01.local:32000/charts --plain-http # if you don't have https
 ```
 
 View published charts:
 
 ```bash
 # List all repositories in the registry
-curl -s http://localhost:32000/v2/_catalog | jq
+curl -s http://node-01.local:32000/v2/_catalog | jq
 
 # List available versions of the chart
-curl -s http://localhost:32000/v2/charts/uptime-kuma/tags/list | jq
+curl -s http://node-01.local:32000/v2/charts/uptime-kuma/tags/list | jq
 
 # Inspect chart metadata for a specific version
-helm show chart oci://localhost:32000/charts/uptime-kuma --version 0.1.0
+helm show chart oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 --plain-http # if you don't have https
 ```
 
 Install directly from it:
 
 ```bash
-helm upgrade --install uptime-kuma oci://localhost:32000/charts/uptime-kuma --version 0.1.0 \
-  --namespace uptime-kuma --create-namespace
+helm upgrade --install uptime-kuma oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 \
+  --namespace uptime-kuma --create-namespace --plain-http # if you don't have https
+```
+```sh
+helm list --all-namespaces
 ```
 
 #### GitHub Container Registry (GHCR)
