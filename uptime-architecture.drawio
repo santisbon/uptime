@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="baAHy9UvL_Tbr_CiEB-y">
-    <mxGraphModel dx="1841" dy="1616" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1942" dy="1084" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -71,6 +71,17 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="LWXLmmySImZp8l_FVkPH-7" edge="1" parent="1" source="LWXLmmySImZp8l_FVkPH-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="SovYsN1hsKdNYdSESh6M-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1mCg2oPWwkbjRcfEFVO1-1" parent="1" style="html=1;dropTarget=0;whiteSpace=wrap;" value="«External»&lt;br&gt;&lt;b&gt;Websi&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;te / Service&lt;/b&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="830" y="621" as="geometry" />
+        </mxCell>
+        <mxCell id="1mCg2oPWwkbjRcfEFVO1-2" parent="1mCg2oPWwkbjRcfEFVO1-1" style="shape=module;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1mCg2oPWwkbjRcfEFVO1-3" edge="1" parent="1" source="SovYsN1hsKdNYdSESh6M-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="1mCg2oPWwkbjRcfEFVO1-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
