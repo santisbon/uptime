@@ -201,3 +201,19 @@ A classic repo is a static directory containing packaged `.tgz` files and an `in
 ### Versioning
 
 Bump `version` in `charts/uptime-kuma/Chart.yaml` before every publish. `appVersion` tracks the upstream Uptime Kuma release and is independent of the chart version.
+
+## Configuring monitor alerts
+
+For an easy and free public notification service with no account needed, use ntfy.
+
+Generate a random topic name. Use your service name to make it easy to recognize.
+```sh
+echo myservice-$(openssl rand -hex 4)
+```
+
+In Uptime Kuma:
+
+1. Select your monitor, *Edit*.
+2. In the Notifications section, *Set Up Notification*.
+3. Notification Type: In the Push Services section, select **Ntfy**.
+4. Give it a *Friendly Name* and paste your generated **ntfy Topic**.
