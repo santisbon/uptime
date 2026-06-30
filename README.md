@@ -81,10 +81,10 @@ helm show chart oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 --p
 
 Install directly from it:
 
-*Assumes you've set up your `/etc/hosts` for `uptime.home` with a node's IP.*
+*Assumes you've set up your `/etc/hosts` for `uptime.internal` with a node's IP.*
 ```bash
 helm upgrade --install uptime-kuma oci://node-01.local:32000/charts/uptime-kuma --version 0.1.0 \
-  --namespace uptime-kuma --create-namespace --set 'httpRoute.hostnames[0]=uptime.home' \
+  --namespace uptime-kuma --create-namespace --set 'httpRoute.hostnames[0]=uptime.internal' \
   --plain-http # if you don't have https
 ```
 
@@ -94,7 +94,7 @@ kubectl get pvc -n uptime-kuma # Should be Bound
 kubectl get pods -n uptime-kuma # Should be Running
 ```
 
-Go to any node's IP/hostname e.g. http://uptime.home
+Go to any node's IP/hostname e.g. http://uptime.internal
 
 ##### GitHub Container Registry (GHCR)
 
@@ -197,7 +197,7 @@ A classic repo is a static directory containing packaged `.tgz` files and an `in
 **Local network access by hostname:** Add a corresponding entry to `/etc/hosts` on any machine that needs to reach the web UI. Any node IP works since Traefik runs as a DaemonSet on every node:
 
 ```
-192.168.1.100  uptime.home
+192.168.1.100  uptime.internal
 ```
 
 ### Versioning
