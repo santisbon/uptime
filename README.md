@@ -144,10 +144,12 @@ helm push uptime-kuma-*.tgz oci://ghcr.io/<github-user>/charts
 
 Install from the registry:
 
+*Assumes you've set up your `/etc/hosts` for `uptime.internal` with a node's IP.*
 ```bash
 helm upgrade --install uptime-kuma oci://ghcr.io/<github-user>/charts/uptime-kuma \
   --version 0.1.0 \
-  --namespace uptime-kuma --create-namespace
+  --namespace uptime-kuma --create-namespace \
+  --set 'httpRoute.hostnames[0]=uptime.internal'
 ```
 
 #### Classic HTTP repository (GitHub Pages)
