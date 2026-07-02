@@ -2,9 +2,21 @@
 
 Helm chart for [Uptime Kuma](https://github.com/louislam/uptime-kuma), a self-hosted monitoring tool, targeting a MicroK8s cluster with the Ceph RBD storage class and Gateway API HTTPRoute ingress.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [1. Publish and install the chart](#1-publish-and-install-the-chart)
+    - [OCI registry (recommended)](#oci-registry-recommended)
+      - [MicroK8s built-in registry](#microk8s-built-in-registry)
+      - [GitHub Container Registry (GHCR)](#github-container-registry-ghcr)
+    - [Classic HTTP repository (GitHub Pages)](#classic-http-repository-github-pages)
+  - [Versioning](#versioning)
+- [Configuring monitor alerts](#configuring-monitor-alerts)
+
 ## Prerequisites
 
-- Helm 3
+- Helm
 - A Kubernetes cluster with `gateway.networking.k8s.io` CRDs and a provisioned Gateway (the MicroK8s `ingress` addon satisfies both, providing a `traefik-gateway` Gateway in the `ingress` namespace)
 - A StorageClass for the data PVC (defaults to `ceph-rbd`; set `persistence.storageClass` to use a different one)
 - A kubeconfig pointing at the cluster. If you're running Helm from a machine that is not a cluster node, copy the kubeconfig from any node and replace the loopback address with the node's LAN IP or host name. If your cluster node user is `ubuntu` and a node is `node-01.local`:
