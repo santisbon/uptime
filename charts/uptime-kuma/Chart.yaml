@@ -1,6 +1,6 @@
 apiVersion: v2
 name: uptime-kuma
-description: Uptime Kuma, a self-hosted monitoring tool
+description: Helm chart for Uptime Kuma, a self-hosted monitoring tool
 type: application
 version: 0.1.0
 appVersion: "2"
@@ -8,8 +8,8 @@ keywords:
   - monitoring
   - uptime
   - status-page
-home: https://github.com/louislam/uptime-kuma
+home: https://github.com/santisbon/uptime
 sources:
-  - https://github.com/louislam/uptime-kuma
+  - https://github.com/santisbon/uptime
 maintainers:
   - name: santisbon
